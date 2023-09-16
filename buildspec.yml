@@ -3,27 +3,21 @@ env:
   variables: 
      ECR_REGISTRY_URL: 424756289338.dkr.ecr.ap-southeast-1.amazonaws.com
      IMAGE_REPO_NAME: blog
+     IMAGE_TAG: Latest
 phases:
-  install:
-    runtime-versions:
-      docker: 19
-
+  
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY_URL
-      - REPOSITORY_URI=$ECR_REGISTRY_URL/$IMAGE_REPO_NAME:lastest
+      - REPOSITORY_URI=$ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG
   build:
     commands:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI -f Dockerfile .
-      - echo Pushing the Docker image to Amazon ECR...
-      - docker push $REPOSITORY_URI
-
+      - 
 post_build:
   commands:
-    - echo Writing image definitions file...
-    - printf '[{"name":"%s","imageUri":"%s"}]' $IMAGE_REPO_NAME $REPOSITORY_URI > imagedefinitions.json
-
-artifacts:
-  files: imagedefinitions.json
+    - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG
