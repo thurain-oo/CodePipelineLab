@@ -10,9 +10,10 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin $ECR_REGISTRY_URL
-      - REPOSITORY_URI=$ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG
+      
   build:
     commands:
+      - REPOSITORY_URI=$ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI -f Dockerfile .
       - 
