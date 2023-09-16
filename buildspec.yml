@@ -13,9 +13,8 @@ phases:
       
   build:
     commands:
-      - REPOSITORY_URI=$ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI -f Dockerfile .
+      - docker build -t $ECR_REGISTRY_URL/$IMAGE_REPO_NAME:$IMAGE_TAG  .
       - 
 post_build:
   commands:
